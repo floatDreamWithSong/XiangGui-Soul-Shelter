@@ -6,29 +6,60 @@ import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DevToolsBubble } from 'react-native-react-query-devtools';
 import Clipboard from '@react-native-clipboard/clipboard';
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+import Toast from 'react-native-toast-message';
+import { View, Text, Platform, AppStateStatus, AppState } from 'react-native';
+import { Icon } from '@/components/ui/icon';
+import { CircleCheckBigIcon, CircleXIcon, InfoIcon } from 'lucide-react-native';
+import { useEffect } from 'react';
+export { ErrorBoundary } from 'expo-router';
+/**
+ * @description Tanstack Query Client
+ */
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+/**
+ * @description 切换AppState，RN Query切换为 focus 或 blur 状态
+ * @param status - The status of the app state
+ */
+function onAppStateChange(status: AppStateStatus) {
+  if (Platform.OS !== 'web') {
+    focusManager.setFocused(status === 'active');
+  }
+}
 
-const queryClient = new QueryClient();
-
+/**
+ * @description Root Layout
+ */
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
+  /**
+   * @description Copy to clipboard， for Tanstack Query DevTools use
+   * @param text - The text to copy
+   * @returns boolean
+   */
   const onCopy = async (text: string) => {
     try {
-      // For Expo:
       Clipboard.setString(text);
-      // OR for React Native CLI:
-      // await Clipboard.setString(text);
       return true;
     } catch {
       return false;
     }
   };
+  /**
+   * @description 监听AppState变化，切换RN query 的 focus 状态，以实现全局的窗口聚焦和失焦重获取数据
+   */
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', onAppStateChange);
+    return () => subscription.remove();
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
@@ -43,6 +74,41 @@ export default function RootLayout() {
         <PortalHost />
       </ThemeProvider>
       <DevToolsBubble onCopy={onCopy} queryClient={queryClient} />
+      {/* Custom Toast Component for Success and Error */}
+      <Toast
+        config={{
+          success: ({ text1 }) => (
+            <View className="flex h-fit flex-row gap-2 rounded-lg bg-primary p-3">
+              <View>
+                <Icon as={CircleCheckBigIcon} className="stroke-green-600" />
+              </View>
+              <View>
+                <Text>{text1}</Text>
+              </View>
+            </View>
+          ),
+          error: ({ text1 }) => (
+            <View className="flex h-fit flex-row gap-2 rounded-lg bg-primary p-3">
+              <View>
+                <Icon as={CircleXIcon} className="stroke-red-600" />
+              </View>
+              <View>
+                <Text>{text1}</Text>
+              </View>
+            </View>
+          ),
+          info: ({ text1 }) => (
+            <View className="flex h-fit flex-row gap-2 rounded-lg bg-primary p-3">
+              <View>
+                <Icon as={InfoIcon} className="stroke-black" />
+              </View>
+              <View>
+                <Text>{text1}</Text>
+              </View>
+            </View>
+          ),
+        }}
+      />
     </QueryClientProvider>
   );
 }

@@ -16,6 +16,12 @@ module.exports = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          // 品牌色
+          hardGreen: 'hsl(var(--brand-hard-green))',
+          darkGreen: 'hsl(var(--brand-dark-green))',
+          brand: 'hsl(var(--brand))',
+          lightGreen: 'hsl(var(--brand-light-green))',
+          yellowGreen: 'hsl(var(--brand-yellow-green))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
