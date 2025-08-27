@@ -66,10 +66,10 @@ export default function RootLayout() {
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
+          <Stack.Screen name="auth/verification-login" options={{ headerShown: false, animation: 'slide_from_right' }} />
           <Stack.Screen name="auth/verification-code" options={{ headerShown: false, animation: 'slide_from_right' }} />
           <Stack.Screen name="welcome" options={{ headerShown: false, animation: 'slide_from_bottom' }} />
-          <Stack.Screen name="auth/verification-login" options={{ headerShown: false, animation: 'slide_from_right' }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen
             name="deep-page"
             options={{ headerShown: true, presentation: 'modal', animation: 'slide_from_right' }}
