@@ -1,6 +1,17 @@
 import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native';
  
 export const THEME = {
+  // 品牌色
+  brand: {
+    hardGreen: 'hsl(124.898 28.994% 33.137%)',
+    darkGreen: 'hsl(104.516 28.182% 43.137%)',
+    green: 'hsl(88.8 43.86% 55.294%)',
+    lightGreen: 'hsl(89.032 50% 75.686%)',
+    yellowGreen: 'hsl(73.846 80.247% 84.118%)',
+    foreground: 'hsl(24 39.823% 22.157%)',
+    foregroundLight: 'hsl(23.077 5.991% 42.549%)',
+    foregroundDark: 'hsl(0 0% 6.275%)',
+  },
   light: {
     background: 'hsl(0 0% 100%)',
     foreground: 'hsl(0 0% 3.9%)',

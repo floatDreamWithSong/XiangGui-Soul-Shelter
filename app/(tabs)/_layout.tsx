@@ -10,9 +10,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        animation:'shift',
-        tabBarActiveTintColor: THEME[colorScheme ?? 'light'].primary,
-        tabBarInactiveTintColor: THEME[colorScheme ?? 'light'].muted,
+        animation: 'shift',
+        tabBarActiveTintColor: THEME.brand.green,
+        tabBarInactiveTintColor: THEME.brand.foregroundLight,
         tabBarStyle: {
           backgroundColor: THEME[colorScheme ?? 'light'].background,
           borderTopColor: THEME[colorScheme ?? 'light'].border,
@@ -22,6 +22,14 @@ export default function TabLayout() {
         },
         headerTintColor: THEME[colorScheme ?? 'light'].foreground,
       }}>
+      <Tabs.Screen
+        name="mine"
+        options={{
+          title: '我的',
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => <Icon as={UserIcon} size={size} color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{

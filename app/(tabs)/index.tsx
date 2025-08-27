@@ -8,10 +8,12 @@ import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { AppState, AppStateStatus, Image, type ImageStyle, Platform, View } from 'react-native';
-import axios from 'axios';
 import { atom, useAtom } from 'jotai';
 import { useFocusEffect } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { request } from '@/lib/request';
+import z from 'zod';
+import message from '@/lib/message';
 
 const LOGO = {
   light: require('@/assets/images/react-native-reusables-light.png'),
@@ -43,20 +45,9 @@ const previousState = atom({
   data: '',
   isFetching: false,
 });
-// 切换AppState，RN Query切换为 focus 或 blur 状态
-function onAppStateChange(status: AppStateStatus) {
-  if (Platform.OS !== 'web') {
-    focusManager.setFocused(status === 'active')
-  }
-}
 
 export default function HomeTab() {
-  // 监听AppState变化，切换RN query 的 focus 状态
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', onAppStateChange)
-  
-    return () => subscription.remove()
-  }, [])
+
   const { colorScheme } = useColorScheme();
   const [refetchCount, setRefetchCount] = React.useState(0);
   const [state, setState] = useAtom(previousState);
@@ -64,14 +55,20 @@ export default function HomeTab() {
     queryKey: ['ping'],
     queryFn: async () => {
         setRefetchCount(refetchCount + 1);
-      const res = await axios.get('http://192.168.31.75:4523/m1/4985137-4643795-default/ping');
-      return JSON.stringify(res.data, null, 2);
+      const res = await request({
+        method: 'GET',
+        url: '/ping',
+        responseValidator: z.null()
+      });
+      message.success('请求成功')
+      return JSON.stringify(res, null, 2);
     },
     refetchOnWindowFocus: true
   });
   React.useEffect(() => {
     setState({ data: data ?? '', isFetching });
   }, [data, isFetching]);
+  // 对于tabs页面，使用useFocusEffect来实现全局的窗口聚焦和失焦重获取数据
   useFocusEffect(
     React.useCallback(() => {
       refetch();

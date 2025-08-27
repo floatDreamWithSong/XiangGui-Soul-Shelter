@@ -15,7 +15,25 @@ module.exports = {
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          // foreground: 'hsl(var(--primary-foreground))',
+          // 品牌色
+          // hardGreen: 'hsl(var(--brand-hard-green))',
+          // darkGreen: 'hsl(var(--brand-dark-green))',
+          // brand: 'hsl(var(--brand))',
+          // lightGreen: 'hsl(var(--brand-light-green))',
+          // yellowGreen: 'hsl(var(--brand-yellow-green))',
+          green: {
+            DEFAULT: 'hsl(var(--brand))',
+            light: 'hsl(var(--brand-light-green))',
+            dark: 'hsl(var(--brand-dark-green))',
+            hard: 'hsl(var(--brand-hard-green))',
+            yellow: 'hsl(var(--brand-yellow-green))',
+          },
+          foreground: {
+            DEFAULT: 'hsl(var(--brand-foreground))',
+            light: 'hsl(var(--brand-foreground-light))',
+            dark: 'hsl(var(--brand-foreground-dark))',
+          },
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
