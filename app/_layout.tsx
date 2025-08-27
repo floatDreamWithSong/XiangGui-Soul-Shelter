@@ -39,7 +39,7 @@ function onAppStateChange(status: AppStateStatus) {
  * @description Root Layout
  */
 export default function RootLayout() {
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme() ?? { colorScheme: 'light' };
   /**
    * @description Copy to clipboard， for Tanstack Query DevTools use
    * @param text - The text to copy
@@ -57,6 +57,7 @@ export default function RootLayout() {
    * @description 监听AppState变化，切换RN query 的 focus 状态，以实现全局的窗口聚焦和失焦重获取数据
    */
   useEffect(() => {
+    setColorScheme('light');
     const subscription = AppState.addEventListener('change', onAppStateChange);
     return () => subscription.remove();
   }, []);
@@ -65,6 +66,8 @@ export default function RootLayout() {
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <Stack>
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/verification-login" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen
             name="deep-page"
