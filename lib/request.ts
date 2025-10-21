@@ -20,11 +20,23 @@ interface ApiResponse<T = any> {
   msg: string
   data: T
 }
-
+/**
+ * mock工具
+ * @param time 毫秒
+ * @returns 
+ */
 function sleep(time: number) {
   return new Promise((res) => {
     setTimeout(res, time)
   })
+}
+
+/**
+ * 重新登录跳转
+ */
+function redirectLogin() {
+  tokenStore.remove()
+  window.location.href = '/auth'
 }
 
 // 创建axios实例
@@ -76,11 +88,9 @@ function createAxiosInstance(): AxiosInstance {
       if (payload.code !== 0 && payload.code !== 200) {
         // 特殊处理认证失败
         if (payload.code === 401) {
-          tokenStore.remove()
-          window.location.href = '/auth'
+          redirectLogin()
         }
         const errmsg = payload.msg || '请求失败'
-        message.error(errmsg)
         throw new Error(errmsg)
       }
 
@@ -98,8 +108,7 @@ function createAxiosInstance(): AxiosInstance {
             break
           case 401:
             errorMessage = '未授权，请重新登录'
-            tokenStore.remove()
-            window.location.href = '/auth'
+            redirectLogin()
             break
           case 403:
             errorMessage = '拒绝访问'

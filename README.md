@@ -18,7 +18,7 @@
 
 - StyleSheet
 
-- tailwindcss(nativewind)(v3)
+- nativewind(tailwindcss v3 compatible)
 
 ### Components Lib
 
@@ -50,15 +50,15 @@ Axios + Zod v4 (Data validation) + tanstack/react-query(aysnc data management)
 
 start it up after you learned:
 
-- basic react concept: state, effect, layoutEffect, ref, Fragment
+- basic `react` concept: `state`, `effect`, `layoutEffect`, `ref`, Fragment
 
-- run the example coed of expo docs, and other core concepts
+- run the example coed of `expo` docs, and other core concepts
 
-- css flex、box-sizing、color and so on
+- css `flex`、box-sizing、color and so on
   
-  - (optinal) basic tailwindcss atomic class
+  - (optinal) basic `tailwindcss v3` atomic class, but we will use `nativewind`
 
-- baisc tanstack/react-query api
+- baisc `tanstack/react-query` api
   
   - useQuery
   
@@ -68,7 +68,7 @@ start it up after you learned:
   
   - useInfiniteQuery (for pagination, or list query)
 
-- zod v4
+- `zod` v4
   
   - z.object(), z.string(), z.number()...
   
@@ -82,7 +82,8 @@ start it up after you learned:
     
     - .transform()
 
-- jotai, basic usage(atomic state)
+- `jotai`, basic usage(atomic state)
+- or `zustand`, or `valtio`, if you like them.
 
 - basic typescript concepts
   
