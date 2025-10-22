@@ -88,3 +88,37 @@ start it up after you learned:
 - basic typescript concepts
   
   - data type: string、number、literal、...
+
+## pre condition
+
+> turn on TUN mode for your proxy is recommanded because not every step is able to set up the mirror for download
+
+### node
+
+you need a nodejs env to start your dev
+
+use `fnm` or `nvm` to manage your nodejs version easier
+
+use node v22 or v24 is recommanded
+
+then you need `npm i -g pnpm@9.15.2` to use pnpm as the package manager
+
+if you want to download nodejs package from mirror site in easier way, `pnpm add -g nrm`, and check nrm useage.
+
+### java
+
+java 21
+
+### Android Studio
+
+download and check it...
+
+## dev guild
+
+assume you have learned essential concept from the tutorial of `expo` [link](https://docs.expo.dev/tutorial/introduction/)
+
+create `.env.local` in the root dir
+
+`EXPO_PUBLIC_API_BASE_URL=xxx` to set up query client base url
+
+start dev build on your android phone, run `pnpm dev:android`， and the device should connect to your PC using USB(and WIFI)
