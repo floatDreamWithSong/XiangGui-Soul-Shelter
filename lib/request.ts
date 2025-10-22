@@ -3,9 +3,11 @@ import axios from 'axios'
 import z from 'zod'
 import message from '@/lib/message'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@env'
 // 基础配置
-const BASE_URL = API_BASE_URL
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL
+if (!BASE_URL) {
+  throw new Error('API_BASE_URL is not set')
+}
 const DEFAULT_TIMEOUT = 120000
 const TOKEN_KEY = 'token'
 export const tokenStore = {
