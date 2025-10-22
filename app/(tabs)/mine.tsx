@@ -22,21 +22,23 @@ export default function Mine() {
       title: '关于',
       icon: InfoIcon,
       link: '/about',
-    }
+    },
   ]);
   return (
     <SafeAreaView>
       <View className="bg-primary-green">
-        <View className="flex mt-28 bg-white h-full rounded-3xl flex-col items-center">
-          <View className="relative border-2 h-24 aspect-square bg-white rounded-full transform -translate-y-1/2">
-            <View className="absolute top-0 left-0 w-full h-full bg-white rounded-full" />
+        <View className="mt-28 flex h-full flex-col items-center rounded-3xl bg-white">
+          <View className="relative aspect-square h-24 -translate-y-1/2 transform rounded-full border-2 bg-white">
+            <View className="absolute left-0 top-0 h-full w-full rounded-full bg-white" />
           </View>
-          <View className="w-full flex flex-col gap-5">
+          <View className="flex w-full flex-col gap-5">
             {settingList.current.map((item) => (
-              <View className="flex flex-row items-center justify-between gap-3 mx-5" key={item.title}>
+              <View
+                className="mx-5 flex flex-row items-center justify-between gap-3"
+                key={item.title}>
                 <View className="flex flex-row items-center gap-3">
                   <Icon as={item.icon} size={24} color={THEME.brand.foregroundDark} />
-                  <Text className="text-primary-foreground-dark font-bold">{item.title}</Text>
+                  <Text className="font-bold text-primary-foreground-dark">{item.title}</Text>
                 </View>
                 <Icon as={ChevronRightIcon} size={24} color={THEME.brand.foregroundDark} />
               </View>

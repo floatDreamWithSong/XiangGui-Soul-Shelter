@@ -4,20 +4,36 @@ import { Icon } from '@/components/ui/icon';
 import { ArrowLeftIcon } from 'lucide-react-native';
 import { Link } from 'expo-router';
 import { View } from 'react-native';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export default function DeepPage() {
   return (
     <View className="flex-1 items-center justify-center gap-8 p-4">
-      <View className="gap-4 items-center">
-        <Text className="text-3xl font-bold text-center">深层页面</Text>
-        <Text className="text-muted-foreground text-center text-lg">
+      <View className="items-center gap-4">
+        <Text className="text-center text-3xl font-bold">深层页面</Text>
+        <Text className="text-center text-lg text-muted-foreground">
           恭喜！你已经成功进入了更深层的路由页面
         </Text>
-        <Text className="text-muted-foreground text-center">
-          这是一个演示深层路由的示例页面
-        </Text>
+        <Text className="text-center text-muted-foreground">这是一个演示深层路由的示例页面</Text>
       </View>
       <Dialog>
         <DialogTrigger asChild>
@@ -29,15 +45,11 @@ export default function DeepPage() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              <Text>
-                这是一个对话框
-              </Text>
+              <Text>这是一个对话框</Text>
             </DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            <Text>
-              这是一个对话框的描述
-            </Text>
+            <Text>这是一个对话框的描述</Text>
           </DialogDescription>
           <DialogFooter>
             <DialogClose asChild>
@@ -58,15 +70,11 @@ export default function DeepPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              <Text>
-                这是一个AlertDialog
-              </Text>
+              <Text>这是一个AlertDialog</Text>
             </AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogDescription>
-            <Text>
-              这是一个AlertDialog的描述
-            </Text>
+            <Text>这是一个AlertDialog的描述</Text>
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel>

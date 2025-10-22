@@ -8,13 +8,13 @@ import { View } from 'react-native';
 export default function SecondTab() {
   return (
     <View className="flex-1 items-center justify-center gap-8 p-4">
-      <View className="gap-4 items-center">
-        <Text className="text-2xl font-bold text-center">第二页</Text>
-        <Text className="text-muted-foreground text-center">
+      <View className="items-center gap-4">
+        <Text className="text-center text-2xl font-bold">第二页</Text>
+        <Text className="text-center text-muted-foreground">
           这是一个简单的第二页，点击下面的按钮进入更深层的路由页面
         </Text>
       </View>
-      
+
       <Link href="/deep-page" asChild>
         <Button className="flex-row items-center gap-2">
           <Text>进入深层页面</Text>

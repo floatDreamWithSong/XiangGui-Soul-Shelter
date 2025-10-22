@@ -24,14 +24,14 @@ export default function VerificationCode() {
   return (
     <SafeAreaView className="flex-1 items-center gap-8">
       <View className="mt-12 flex-col items-center gap-4">
-        <Icon as={DogIcon} className="stroke-primary-foreground-dark size-16" />
+        <Icon as={DogIcon} className="size-16 stroke-primary-foreground-dark" />
         <View className="flex-col items-center gap-2">
           <Text className="text-3xl text-primary-foreground">我们已将验证码</Text>
           <Text className="text-3xl text-primary-foreground">发送至</Text>
           <Text className="text-3xl text-primary-foreground">13800138000</Text>
           <Text className="text-xl text-primary-foreground">请在下方输入收到的验证码</Text>
         </View>
-        <View className="flex justify-center items-center mt-2 gap-2">
+        <View className="mt-2 flex items-center justify-center gap-2">
           <OTPInput
             ref={ref}
             onComplete={onComplete}
@@ -44,7 +44,7 @@ export default function VerificationCode() {
               </View>
             )}
           />
-          <Text className="text-primary-foreground-light text-center text-sm">未收到验证码？</Text>
+          <Text className="text-center text-sm text-primary-foreground-light">未收到验证码？</Text>
           <Button className="my-2 h-14 w-72 rounded-full">
             <Text className="text-xl text-white">重新发送验证码</Text>
           </Button>
@@ -58,12 +58,11 @@ function Slot({ char, isActive, hasFakeCaret }: SlotProps) {
   return (
     <View
       className={cn(
-        'w-12 aspect-square items-center justify-center border border-gray-200 rounded-lg bg-white',
+        'aspect-square w-12 items-center justify-center rounded-lg border border-gray-200 bg-white',
         {
-          'border-primary-green-dark border-2': isActive,
+          'border-2 border-primary-green-dark': isActive,
         }
-      )}
-    >
+      )}>
       {char !== null && (
         <Text className="text-2xl font-medium text-primary-green-dark">{char}</Text>
       )}
@@ -77,10 +76,7 @@ function FakeCaret() {
 
   useEffect(() => {
     opacity.value = withRepeat(
-      withSequence(
-        withTiming(0, { duration: 500 }),
-        withTiming(1, { duration: 500 })
-      ),
+      withSequence(withTiming(0, { duration: 500 }), withTiming(1, { duration: 500 })),
       -1,
       true
     );
@@ -97,7 +93,7 @@ function FakeCaret() {
   };
 
   return (
-    <View className="absolute w-full h-full items-center justify-center">
+    <View className="absolute h-full w-full items-center justify-center">
       <Animated.View className="bg-primary-green-dark" style={[baseStyle, animatedStyle]} />
     </View>
   );

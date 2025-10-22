@@ -24,7 +24,7 @@ export default function Welcome() {
         if (response.ok) {
           // 获取图片的实际尺寸
           const imageUri = response.url;
-          
+
           // 创建一个Image组件来获取图片尺寸
           Image.getSize(
             imageUri,
@@ -58,10 +58,10 @@ export default function Welcome() {
       // 根据容器高度和图片比例计算宽度
       const newHeight = containerHeight;
       const newWidth = newHeight * imageAspectRatio;
-      
+
       setImageSize({
         width: newWidth,
-        height: newHeight
+        height: newHeight,
       });
     }
   }, [imageLoaded, containerHeight, imageAspectRatio]);
@@ -74,33 +74,29 @@ export default function Welcome() {
 
   return (
     <SafeAreaView className="flex-1 items-center justify-around gap-10">
-      <View className="flex-col items-center gap-2 mt-10">
-        <Icon as={DogIcon} className="stroke-primary-foreground-dark size-16" />
+      <View className="mt-10 flex-col items-center gap-2">
+        <Icon as={DogIcon} className="size-16 stroke-primary-foreground-dark" />
         <View className="flex-col items-center gap-2">
           <Text className="text-3xl text-primary-foreground">欢迎使用</Text>
           <Text className="text-3xl text-primary-foreground">向归</Text>
         </View>
-        <Text className="text-primary-foreground-light text-base">AI辅助治疗哀伤疗愈的先行者</Text>
+        <Text className="text-base text-primary-foreground-light">AI辅助治疗哀伤疗愈的先行者</Text>
       </View>
-      <View 
-        ref={containerRef}
-        className="flex-1"
-        onLayout={onContainerLayout}
-      >
+      <View ref={containerRef} className="flex-1" onLayout={onContainerLayout}>
         {imageLoaded && imageSize.width > 0 && (
           <Image
             source={{ uri: imageUri.current }}
-            style={{ 
-              width: imageSize.width, 
+            style={{
+              width: imageSize.width,
               height: imageSize.height,
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}
-            className='border-2 border-primary-foreground-light'
+            className="border-2 border-primary-foreground-light"
             resizeMode="contain"
           />
         )}
       </View>
-      <View className="flex flex-col items-center justify-center gap-4 mb-10">
+      <View className="mb-10 flex flex-col items-center justify-center gap-4">
         <Button className="h-14 w-72 rounded-full">
           <Text className="text-xl text-white">开始创建虚拟伙伴</Text>
           <Icon as={ArrowRightIcon} className="absolute right-6 size-5 stroke-white" />

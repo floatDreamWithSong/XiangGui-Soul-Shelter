@@ -9,7 +9,8 @@
     "web": "cross-env DARK_MODE=media expo start -c --web",
     "dev:android": "expo run:android",
     "prebuild:android": "expo prebuild --clean --platform android",
-    "dev:android:nocache": "expo run:android --no-build-cache"
+    "dev:android:nocache": "expo run:android --no-build-cache",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
     "@gluestack-ui/icon": "^0.1.27",

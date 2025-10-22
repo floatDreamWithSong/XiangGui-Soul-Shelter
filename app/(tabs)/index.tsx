@@ -47,23 +47,22 @@ const previousState = atom({
 });
 
 export default function HomeTab() {
-
   const { colorScheme } = useColorScheme();
   const [refetchCount, setRefetchCount] = React.useState(0);
   const [state, setState] = useAtom(previousState);
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['ping'],
     queryFn: async () => {
-        setRefetchCount(refetchCount + 1);
+      setRefetchCount(refetchCount + 1);
       const res = await request({
         method: 'GET',
         url: '/ping',
-        responseValidator: z.null()
+        responseValidator: z.null(),
       });
-      message.success('请求成功')
+      message.success('请求成功');
       return JSON.stringify(res, null, 2);
     },
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: true,
   });
   React.useEffect(() => {
     setState({ data: data ?? '', isFetching });
@@ -72,7 +71,7 @@ export default function HomeTab() {
   useFocusEffect(
     React.useCallback(() => {
       refetch();
-    }, [refetch]),
+    }, [refetch])
   );
   return (
     <>
@@ -88,11 +87,11 @@ export default function HomeTab() {
           </Text>
         </View>
         <View className="flex-row gap-2">
-            <Button onPress={() => refetch()}>
-              <Text>{isFetching ? 'Loading...' : 'ok'}</Text>
-            </Button>
+          <Button onPress={() => refetch()}>
+            <Text>{isFetching ? 'Loading...' : 'ok'}</Text>
+          </Button>
           <Link href="https://reactnativereusables.com" asChild>
-          <Text>Browse the Docs </Text>
+            <Text>Browse the Docs </Text>
           </Link>
           <Link href="https://github.com/founded-labs/react-native-reusables" asChild>
             <Button variant="ghost">

@@ -1,175 +1,185 @@
-import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import axios from 'axios'
-import z from 'zod'
-import message from '@/lib/message'
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+import z from 'zod';
+import message from '@/lib/message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // 基础配置
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 if (!BASE_URL) {
-  throw new Error('API_BASE_URL is not set')
+  throw new Error('API_BASE_URL is not set');
 }
-const DEFAULT_TIMEOUT = 120000
-const TOKEN_KEY = 'token'
+const DEFAULT_TIMEOUT = 120000;
+const TOKEN_KEY = 'token';
 export const tokenStore = {
   get: () => AsyncStorage.getItem(TOKEN_KEY),
   set: (token: string) => AsyncStorage.setItem(TOKEN_KEY, token),
   remove: () => AsyncStorage.removeItem(TOKEN_KEY),
-}
+};
 
 // 通用响应数据格式
 interface ApiResponse<T = any> {
-  code: number | string
-  msg: string
-  data: T
+  code: number | string;
+  msg: string;
+  data: T;
 }
 /**
  * mock工具
  * @param time 毫秒
- * @returns 
+ * @returns
  */
 function sleep(time: number) {
   return new Promise((res) => {
-    setTimeout(res, time)
-  })
+    setTimeout(res, time);
+  });
 }
 
 /**
  * 重新登录跳转
  */
 function redirectLogin() {
-  tokenStore.remove()
-  window.location.href = '/auth'
+  tokenStore.remove();
+  window.location.href = '/auth';
 }
 
 // 创建axios实例
 function createAxiosInstance(): AxiosInstance {
-  console.log(BASE_URL)
+  console.log(BASE_URL);
   const instance = axios.create({
     baseURL: BASE_URL,
     timeout: DEFAULT_TIMEOUT,
     headers: {
       'Content-Type': 'application/json',
     },
-  })
+  });
 
   // 请求拦截器 - 自动token装配
   instance.interceptors.request.use(
     async (config) => {
-      const token = tokenStore.get()
+      const token = tokenStore.get();
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers.Authorization = `Bearer ${token}`;
       }
       if (process.env.NODE_ENV === 'development') {
-        await sleep(1)
+        await sleep(1);
       }
-      return config
+      return config;
     },
     (error) => {
-      return Promise.reject(error)
-    },
-  )
+      return Promise.reject(error);
+    }
+  );
 
   // 响应拦截器 - 全局错误拦截和数据格式验证
   instance.interceptors.response.use(
     (response: AxiosResponse<ApiResponse>) => {
-      const { data: payload } = response
-      const compability = z.object({
-        errcode: z.number(),
-      }).safeParse(payload)
+      const { data: payload } = response;
+      const compability = z
+        .object({
+          errcode: z.number(),
+        })
+        .safeParse(payload);
       if (compability.success) {
-        payload.code = compability.data.errcode
+        payload.code = compability.data.errcode;
       }
       const BasePayloadValidator = z.object({
         code: z.number({ error: '响应数据缺少code' }),
         msg: z.string({ error: '响应数据缺少msg' }),
-      })
+      });
       if (!BasePayloadValidator.safeParse(payload).success) {
-        throw new Error('响应数据格式错误，\n预期: {errcode/code: number, msg: string}')
+        throw new Error('响应数据格式错误，\n预期: {errcode/code: number, msg: string}');
       }
       // 检查业务状态码
       if (payload.code !== 0 && payload.code !== 200) {
         // 特殊处理认证失败
         if (payload.code === 401) {
-          redirectLogin()
+          redirectLogin();
         }
-        const errmsg = payload.msg || '请求失败'
-        throw new Error(errmsg)
+        const errmsg = payload.msg || '请求失败';
+        throw new Error(errmsg);
       }
 
-      return response
+      return response;
     },
     (error: AxiosError) => {
       // 网络错误处理
-      let errorMessage = '网络请求失败'
+      let errorMessage = '网络请求失败';
 
       if (error.response) {
-        const status = error.response.status
+        const status = error.response.status;
         switch (status) {
           case 400:
-            errorMessage = '请求参数错误'
-            break
+            errorMessage = '请求参数错误';
+            break;
           case 401:
-            errorMessage = '未授权，请重新登录'
-            redirectLogin()
-            break
+            errorMessage = '未授权，请重新登录';
+            redirectLogin();
+            break;
           case 403:
-            errorMessage = '拒绝访问'
-            break
+            errorMessage = '拒绝访问';
+            break;
           case 404:
-            errorMessage = '请求资源不存在'
-            break
+            errorMessage = '请求资源不存在';
+            break;
           case 500:
-            errorMessage = '服务器内部错误'
-            break
+            errorMessage = '服务器内部错误';
+            break;
           default:
-            errorMessage = `请求失败 (${status})`
+            errorMessage = `请求失败 (${status})`;
         }
+      } else if (error.request) {
+        errorMessage = '网络连接失败';
       }
-      else if (error.request) {
-        errorMessage = '网络连接失败'
+      if (
+        error.response?.data &&
+        typeof error.response.data === 'object' &&
+        'msg' in error.response.data
+      ) {
+        errorMessage += `: ${error.response.data.msg}`;
       }
-      if (error.response?.data && typeof error.response.data === 'object' && 'msg' in error.response.data) {
-        errorMessage += `: ${error.response.data.msg}`
-      }
-      message.error(errorMessage)
-      return Promise.reject(new Error(errorMessage))
-    },
-  )
+      message.error(errorMessage);
+      return Promise.reject(new Error(errorMessage));
+    }
+  );
 
-  return instance
+  return instance;
 }
 
 // 创建axios客户端
-const httpClient = createAxiosInstance()
+const httpClient = createAxiosInstance();
 
 // 基础请求方法
-export async function request<T extends z.ZodSchema>(config: AxiosRequestConfig & { responseValidator?: T, dataValidator?: z.ZodSchema, paramsValidator?: z.ZodSchema }): Promise<z.infer<T>> {
+export async function request<T extends z.ZodSchema>(
+  config: AxiosRequestConfig & {
+    responseValidator?: T;
+    dataValidator?: z.ZodSchema;
+    paramsValidator?: z.ZodSchema;
+  }
+): Promise<z.infer<T>> {
   try {
     if (config.dataValidator) {
-      const result = config.dataValidator.safeParse(config.data)
+      const result = config.dataValidator.safeParse(config.data);
       if (!result.success) {
-        throw new Error(`请求${config.url}的body数据格式错误:${result.error.message}`)
+        throw new Error(`请求${config.url}的body数据格式错误:${result.error.message}`);
       }
     }
     if (config.paramsValidator) {
-      const result = config.paramsValidator.safeParse(config.params)
+      const result = config.paramsValidator.safeParse(config.params);
       if (!result.success) {
-        throw new Error(`请求${config.url}的params数据格式错误:${result.error.message}`)
+        throw new Error(`请求${config.url}的params数据格式错误:${result.error.message}`);
       }
     }
-    const response = await httpClient.request<ApiResponse<z.infer<T>>>(config)
+    const response = await httpClient.request<ApiResponse<z.infer<T>>>(config);
     if (!config.responseValidator) {
-      return response.data.data
+      return response.data.data;
     }
-    const result = config.responseValidator.safeParse(response.data.data)
+    const result = config.responseValidator.safeParse(response.data.data);
     if (!result.success) {
-      throw new Error(`请求${config.url}的响应数据格式错误:${result.error.message}`)
+      throw new Error(`请求${config.url}的响应数据格式错误:${result.error.message}`);
     }
-    return result.data
-  }
-  catch (error) {
-    console.error(error)
-    message.error(error instanceof Error ? error.message : '未知错误')
-    throw error instanceof Error ? error : new Error('未知错误')
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    message.error(error instanceof Error ? error.message : '未知错误');
+    throw error instanceof Error ? error : new Error('未知错误');
   }
 }
