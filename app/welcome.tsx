@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { Text } from '@/components/ui/text';
+import { Text } from "react-native";
 import { Link } from 'expo-router';
-import { ArrowRightIcon, DogIcon } from 'lucide-react-native';
 import { View, Image, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect, useRef } from 'react';
+import { DogIcon } from "lucide-react-native";
+import { ImageBackground } from "react-native";
 
 export default function Welcome() {
   const { height: screenHeight } = useWindowDimensions();
@@ -14,43 +14,17 @@ export default function Welcome() {
   const [imageAspectRatio, setImageAspectRatio] = useState(1);
   const containerRef = useRef<View>(null);
   const [containerHeight, setContainerHeight] = useState(0);
-  const imageUri = useRef('https://tc.alcy.cc/i/2025/07/29/6887a58dc97a9.webp');
+  const imageUri = useRef(require('../assets/images/welcome.png'));
+
 
   // 获取图片信息
-  useEffect(() => {
-    const getImageInfo = async () => {
-      try {
-        const response = await fetch(imageUri.current);
-        if (response.ok) {
-          // 获取图片的实际尺寸
-          const imageUri = response.url;
+useEffect(() => {
+  const asset = Image.resolveAssetSource(imageUri.current);
+  const aspectRatio = asset.width / asset.height;
+  setImageAspectRatio(aspectRatio);
+  setImageLoaded(true);
+}, []);
 
-          // 创建一个Image组件来获取图片尺寸
-          Image.getSize(
-            imageUri,
-            (width, height) => {
-              const aspectRatio = width / height;
-              setImageAspectRatio(aspectRatio);
-              setImageLoaded(true);
-            },
-            (error) => {
-              console.error('获取图片尺寸失败:', error);
-              // 如果获取失败，使用默认比例
-              setImageAspectRatio(270 / 330);
-              setImageLoaded(true);
-            }
-          );
-        }
-      } catch (error) {
-        console.error('获取图片失败:', error);
-        // 如果获取失败，使用默认比例
-        setImageAspectRatio(270 / 330);
-        setImageLoaded(true);
-      }
-    };
-
-    getImageInfo();
-  }, []);
 
   // 计算图片尺寸
   useEffect(() => {
@@ -73,19 +47,58 @@ export default function Welcome() {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-around gap-10">
-      <View className="mt-10 flex-col items-center gap-2">
-        <Icon as={DogIcon} className="size-16 stroke-primary-foreground-dark" />
-        <View className="flex-col items-center gap-2">
-          <Text className="text-3xl text-primary-foreground">欢迎使用</Text>
-          <Text className="text-3xl text-primary-foreground">向归</Text>
-        </View>
-        <Text className="text-base text-primary-foreground-light">AI辅助治疗哀伤疗愈的先行者</Text>
+    <ImageBackground
+  source={require('../assets/images/bglogin.png')}   // 你的背景图 URL 或本地资源
+  style={{ flex: 1 }}
+  resizeMode="cover"    // cover = 铺满并裁剪，contain = 不裁剪但可能留空
+>
+    <SafeAreaView
+      style={{
+      flex: 1,
+  }}
+>
+
+      <View className="mt-10 flex-col items-center">
+  <View
+      style={{
+        width: "100%",
+        alignItems: "center",
+        marginTop: 60,
+      }}
+    >
+  <DogIcon size={60} strokeWidth={2} color="#000000ff" />
+</View>
+
+
+       <Text
+  style={{
+    fontSize: 48,
+    textAlign: "center",
+    color: "#000000ff",
+    marginTop: 40,
+  }}
+>
+  欢迎来到向归
+</Text>
+
+<Text
+  style={{
+    fontSize: 20,
+    textAlign: "center",
+    color: "#000000ff",
+    marginTop: 20,
+    lineHeight: 34,
+  }}
+>
+  AI辅助哀伤疗愈的同行者
+</Text>
+
       </View>
-      <View ref={containerRef} className="flex-1" onLayout={onContainerLayout}>
+      <View ref={containerRef} onLayout={onContainerLayout} style={{ flex: 1 }}>
+
         {imageLoaded && imageSize.width > 0 && (
           <Image
-            source={{ uri: imageUri.current }}
+            source={imageUri.current }
             style={{
               width: imageSize.width,
               height: imageSize.height,
@@ -96,18 +109,42 @@ export default function Welcome() {
           />
         )}
       </View>
-      <View className="mb-10 flex flex-col items-center justify-center gap-4">
-        <Button className="h-14 w-72 rounded-full">
-          <Text className="text-xl text-white">开始创建虚拟伙伴</Text>
-          <Icon as={ArrowRightIcon} className="absolute right-6 size-5 stroke-white" />
-        </Button>
-        <Text className="text-primary-foreground-light">
-          已有伙伴，可点此
-          <Link className="text-primary" href="/auth/verification-login">
-            登录
-          </Link>
-        </Text>
-      </View>
+
+      <View
+  style={{
+    marginBottom: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Button
+    style={{
+      height: 56,           // h-14
+      width: 288,           // w-72
+      borderRadius: 9999,   // rounded-full
+      borderWidth: 2,             // 边框粗细
+      borderColor: 'hsl(88.8 43.86% 55.294%)',     // 边框颜色（稍深一点的绿，会更好看）
+      backgroundColor: 'hsl(88.8 43.86% 55.294%)',   // 绿色底
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <Link
+      href="/auth/register"
+      style={{
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#fdfdfdff',   
+        textAlign: 'center',
+      }}
+    >
+      开始创建虚拟伙伴
+    </Link>
+  </Button>
+</View>
+
+
     </SafeAreaView>
+  </ImageBackground>
   );
 }
